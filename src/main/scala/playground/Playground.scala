@@ -68,6 +68,14 @@ object Playground extends App {
     * If the schema and the contents of the DataFrame are printed correctly to the console,
     * this means the libraries work correctly and you can jump into the course!
     */
+  def take_keys[T1](arr: Seq[Map[Int, T1]]): Seq[Int] = {
+    arr.map(_.keys.head)
+  }
+
+  val take_keys_udf = udf(take_keys _)
+
+  carsDF.withColumn("keys", take_keys_udf(col("ArrayMap"))).show()
+
   carsDF.withColumn("keys",
     udf((item: Seq[Map[Int, Int]]) => item.map(_.keys.head)).apply(col("ArrayMap"))
   ).show()
